@@ -11,5 +11,4 @@ public class DoWhileTest {
 		}
 		System.out.println(i);
 	}
-	System.out.println(i);
 }
