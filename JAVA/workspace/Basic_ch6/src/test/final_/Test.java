@@ -32,6 +32,8 @@ public class Test {
 		System.out.println(s3==s4);
 		System.out.println(s3.equals(s4));
 		
+		double t=(Math.PI)*(Math.PI);
+		System.out.println(t);
 		
 	}
 

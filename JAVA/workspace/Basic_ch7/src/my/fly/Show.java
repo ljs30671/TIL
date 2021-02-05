@@ -2,20 +2,10 @@ package my.fly;
 
 public class Show {
 
-	public void airShow(Object o) {
+	public void airShow(Flyer f) {
 		
-		if(o instanceof Bird) {
-			Bird b=(Bird)o;
-			b.fly();
-		}else if(o instanceof Superman) {
-			Superman s=(Superman)o;
-			s.flying();
-		}else if(o instanceof Airplane) {
-			Airplane a=(Airplane)o;
-			a.flight();
-		}else {
-			System.out.println("날 수 없으므로, air show를 할 수 없습니다.");
-		}
+		f.fly();
+		
 	}
 	
 }

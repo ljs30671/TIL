@@ -8,4 +8,10 @@ public class Car extends Vehicle {
 		System.out.println(distance+"만큼 달립니다...");
 	}
 
+	@Override
+	public void drive() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

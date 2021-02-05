@@ -1,6 +1,6 @@
 package my.fly;
 
-public class Vehicle {
+public abstract class Vehicle {
 	
 	public int transfer (int start, int end) {
 		
@@ -9,5 +9,7 @@ public class Vehicle {
 		return distance;
 		
 	}
+	
+	public abstract void drive();
 
 }
