@@ -5,7 +5,7 @@ public class MathSqrt_ {
 	
 	
 	public static void main(String[] args) {
-		long n=625;
+		long n=121;
 		long result = 0;
 		
 		if(Math.pow(Math.sqrt(n), 2)== n) {
