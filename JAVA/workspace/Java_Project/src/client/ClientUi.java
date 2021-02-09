@@ -3,64 +3,68 @@ package client;
 import java.awt.*;
 import java.awt.event.*;
 
-import javax.swing.BoxLayout;
-
 public class ClientUi {
-
-	public static void main(String[] args) {
-
-		Frame f = new Frame("MyChat");
-		Panel p1 = new Panel();
-		Panel p2 = new Panel();
+	TextArea ta;
+	TextField tf;	
+	
+	public void onCreate() {
+		Frame f=new Frame("나의 채팅");
+		Panel p=new Panel();
+		Button b1=new Button("전송1");
+		 tf=new TextField(20);
+		 ta=new TextArea();	
 		
-		Checkbox cb1 = new Checkbox("밥");
-		Checkbox cb2 = new Checkbox("빵");
-		Checkbox cb3 = new Checkbox("물");
-		
-		CheckboxGroup cbG = new CheckboxGroup();
-		Checkbox cb4 = new Checkbox("학사",cbG,true);
-		Checkbox cb5 = new Checkbox("석사",cbG,false);
-		Checkbox cb6 = new Checkbox("박사",cbG,false);
-		
-		Button b1 = new Button("전송");
-		Button b2 = new Button("패널2");
-		TextField tf = new TextField("", 20);
-		TextArea ta = new TextArea();
-
 		WindowListener fHandler=new MyFrameHandler();
-		f.addWindowListener(fHandler);
+		f.addWindowListener(fHandler);		
 		
-		MyButtonHandler b1Handler = new MyButtonHandler();
-		b1Handler.setTextArea(ta);
-		b1Handler.setTextField(tf);
+		
+		MyButtonHandler b1Handler=new MyButtonHandler();				
 		b1.addActionListener(b1Handler);
 		
-		//enter칠때 전송 하기 위함
+			
 		tf.addActionListener(b1Handler);
-
-		f.add(ta, BorderLayout.CENTER);
-		f.add(p1, BorderLayout.SOUTH);
-		f.add(p2, BorderLayout.EAST);
-		p1.add(tf);
-		p1.add(b1);
-		p2.add(cb1);
-		p2.add(cb2);
-		p2.add(cb3);
-		p2.add(cb4);
-		p2.add(cb5);
-		p2.add(cb6);
-		p2.add(b2);
-		p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
 		
-		p2.setBackground(Color.gray);
-		p1.setBackground(Color.gray);
 
-		f.setSize(800, 500);
+		f.add(ta,BorderLayout.CENTER);
+		f.add(p,BorderLayout.SOUTH);
+		p.add(tf);
+		p.add(b1);
+		
+		p.setBackground(Color.gray);
+		
+		//Color bgColor=new Color(123,24,56);
+		f.setBackground(Color.GREEN);
 		f.setLocation(800, 200);
-		// Color bgColor=new Color(235,0,0);
-		f.setBackground(Color.ORANGE);
+		f.setSize(400,500);
 		f.setVisible(true);
+	}
+
+	public static void main(String[] args) {
+		ClientUi ui=new ClientUi();
+		ui.onCreate();
+	}//end main
+	
+	public class MyButtonHandler implements ActionListener {
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// 하고 싶은 일
+			String msg=tf.getText();
+			ta.append(msg+"\n");
+			tf.setText("");
+		}
+		
+	}
+	
+	public class MyFrameHandler extends WindowAdapter{	
+
+		@Override
+		public void windowClosing(WindowEvent e) {
+			System.out.println("windowClosing");
+			System.exit(0);
+		}
 
 	}
 
-}
+
+}//end ClientUi
