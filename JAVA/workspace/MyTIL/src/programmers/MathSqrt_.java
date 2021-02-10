@@ -1,4 +1,4 @@
-package com.jslee;
+package programmers;
 
 public class MathSqrt_ {
 
