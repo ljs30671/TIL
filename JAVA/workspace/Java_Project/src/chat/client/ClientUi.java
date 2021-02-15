@@ -1,63 +1,110 @@
-package client;
+package chat.client;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 public class ClientUi {
 	TextArea ta;
 	TextField tf;
+	DataOutputStream out;
+	DataInputStream in;
+	String chatId;
+	
+	class ClientThread extends Thread {
 
-	public void chatMsg() {
+		@Override
+		public void run() {
+			while (true) {
+				try {
+
+					ta.append(in.readUTF()+"\n");// 채팅 메세지 읽기
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+
+	public void chatMsg() { // 채팅 메세지 전송
 		String msg = tf.getText();
-		ta.append(msg + "\n");
+		try {
+			out.writeUTF(chatId+msg);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		tf.setText("");
 	}
 
 	public void onCreate() {
-		final Frame f = new Frame("나의 채팅");
+		Frame f = new Frame("나의 채팅");
 		Panel p = new Panel();
 		Button b1 = new Button("채팅");
 		tf = new TextField(20);
 		ta = new TextArea();
-
 		MenuBar mb = new MenuBar();
 		Menu file_menu = new Menu("파일");
 		Menu edit_menu = new Menu("편집");
 		MenuItem open_item = new MenuItem("열기");
 		MenuItem save_item = new MenuItem("저장");
-		MenuItem saveAs_item = new MenuItem("다른 이름으로 저장");
 
 		file_menu.add(open_item);
 		file_menu.add(save_item);
-		file_menu.add(saveAs_item);
-
 		mb.add(file_menu);
 		mb.add(edit_menu);
 		f.setMenuBar(mb);
 
-		open_item.addActionListener(new ActionListener() {
+		save_item.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent ae) {
+
+				FileDialog save = new FileDialog(f, "저장 창", FileDialog.SAVE);
+				save.setVisible(true);
+
+				FileWriter fw = null;
+				try {
+					fw = new FileWriter(save.getDirectory() + save.getFile());
+					fw.write(ta.getText());
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					try {
+						if (fw != null)
+							fw.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+			}
+		});
+
+		open_item.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent a) {
 				System.out.println("file open?");
 				FileDialog open = new FileDialog(f, "열기 창", FileDialog.LOAD);
 				open.setVisible(true);
-				
+
 				FileReader fr = null;
 				BufferedReader br = null;
-				// 자바에서 경로는 '\' 두 번
 				try {
-					fr = new FileReader(open.getDirectory()+open.getFile());
+					fr = new FileReader(open.getDirectory() + open.getFile());
 					br = new BufferedReader(fr);
 					String oneLine = "";
 					ta.setText("");
 					while ((oneLine = br.readLine()) != null) {
-						ta.append(oneLine+"\n");
+						ta.append(oneLine + "\n");
 					}
+
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -77,24 +124,34 @@ public class ClientUi {
 			}
 		});
 
-		ta.addTextListener(e -> System.out.println("Text Changed"));
-
 		f.addWindowListener(new WindowAdapter() {
-
 			@Override
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);
 			}
-
 		});
 
 		b1.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// 채팅 서버와 연결
-				
-				
+				// 채팅 서버 연결
+				chatId = "["+tf.getText()+"]";
+				ta.setText(chatId + "님이 채팅을 시작합니다\n");
+				try {
+					Socket s = new Socket("localhost", 9999);
+					out = new DataOutputStream(s.getOutputStream());
+					in=new DataInputStream(s.getInputStream());
+					ClientThread t=new ClientThread();
+					t.start();
+					ta.append("연결 성공\n");
+					tf.setText("");
+
+				} catch (UnknownHostException e1) {
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 
