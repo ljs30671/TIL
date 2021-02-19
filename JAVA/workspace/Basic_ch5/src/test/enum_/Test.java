@@ -7,7 +7,7 @@ public class Test {
 		Week o1=Week.MON;
 		System.out.println(o1);
 		
-		Week o2=Week.화;
+		Week o2=Week.MON;
 		System.out.println(o2);
 		
 

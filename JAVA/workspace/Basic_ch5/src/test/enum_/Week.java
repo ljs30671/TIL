@@ -1,14 +1,14 @@
 package test.enum_;
 
 public enum Week {
-	MON,화,수,목,금,토,일;
+	MON;
 	
 
 }
 /*
 ==
 class week{
-	public static final char 월='월';
+	public static final char �썡='�썡';
 }
 
 */

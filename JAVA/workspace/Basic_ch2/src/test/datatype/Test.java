@@ -8,11 +8,11 @@ public class Test {
 		
 		int age=29;
 		double tall=176.6;
-		char gender='남';
+		char gender='m';
 		boolean isPretty=true;
 		
 		//MemberName name= new MemberName();
-		String name=new String("이준섭");
+		String name=new String("abc");
 		
 		//MyDate birthday=new MyDate();
 		Date birthday=new Date(1993,05,02);
@@ -23,7 +23,7 @@ public class Test {
 		System.out.println(gender);
 		System.out.println(isPretty);
 		System.out.println(name);
-		System.out.println(birthday.getYear()+"년"+birthday.getMonth()+"월"+birthday.getDay()+"일");
+		System.out.println(birthday.getYear()+"�뀈"+birthday.getMonth()+"�썡"+birthday.getDay()+"�씪");
 		
 		
 		
