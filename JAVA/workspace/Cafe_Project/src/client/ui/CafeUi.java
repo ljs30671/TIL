@@ -7,22 +7,39 @@ import java.util.Date;
 
 import javax.swing.JOptionPane;
 
-import common.entity.Member;
+import common.entity.MemberDTO;
+import common.entity.OrderDTO;
+import common.entity.ProductDTO;
 import common.util.CafeException;
 import server.service.MemberService;
+import server.service.OrderService;
+import server.service.ProductService;
 
 
 public class CafeUi extends Frame{
 	
 	MemberService mservice;
+	ProductService pService;
+	OrderService oService;
 	
 	TextField tf_memId, tf_memName,tf_phone,tf_prodCode,tf_prodName,tf_prodPrice,tf_orderMem,tf_orderProd,tf_orderQuan;
 	Button btn_memInsert,btn_memUpdate,btn_memSelect,btn_memDelete,btn_prodInsert,btn_prodUpdate,btn_prodSelect,btn_prodDelete;
 	Button btn_order;
 	TextArea ta_mem,ta_prod,ta_order;
+	
+	
 			
 	@Override
 	public void setVisible(boolean b) {
+		try {
+			mservice=new MemberService();
+			pService = new ProductService();
+			oService=new OrderService();
+		} catch (CafeException e1) {
+			System.out.println(e1.getMessage()+"???§Ì?? Ï¢?Î£?");
+			System.exit(0);
+		}
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -30,35 +47,47 @@ public class CafeUi extends Frame{
 			}
 		});
 		setLayout(new GridLayout(1,3,20,0));
-		memberPanel();//Í≥†Í∞ùÌåê
-		productPanel();	//ÏÉÅÌíàÌåê
-		ordersPanel();//Ï£ºÎ¨∏Ìåê
+		memberPanel();//Í≥?Í∞???
+		productPanel();	//??????
+		ordersPanel();//Ï£ºÎ¨∏??
 		
 		
-		setLocation(200,300);
+		setLocation(200,200);
 		pack();
 		eventProcess();
-		setData();
+		setMemberList();
+		setProductList();
 		super.setVisible(b);
 	}
 	
-	private void setData() {
-		// ÌôîÎ©¥Ïù¥ Îú®ÏûêÎßàÏûê Î™®Îì† Í≥†Í∞ù Î¶¨Ïä§Ìä∏Í∞Ä Î≥¥Ïù¥ÎèÑÎ°ù
+	private void setProductList() {
 		try {
-			mservice = new MemberService();
-			ArrayList<Member> list = mservice.selectMember();
-			for(Member m:list) {
-				
-				ta_mem.append(m.getMemId()+"\t"+m.getName()+"\t"+m.getmDate()+"\t"+m.getPhone()+"\t"+m.getPoint()+"\n");
-				
+			ArrayList<ProductDTO> list=pService.selectProduct();
+			ta_prod.setText("");
+			for(ProductDTO p:list) {
+				ta_prod.append(p.getProdCode()+"\t"+p.getProdName()+"\t"+p.getPrice()+"\n");
 			}
 		} catch (CafeException e) {
-			
-			JOptionPane.showMessageDialog(this,  e.getMessage());
+			JOptionPane.showMessageDialog(this, e.getMessage());
 		}
 		
 	}
-	
+
+	private void setMemberList() {
+		// ??Î©? ?®Ï??Îß??? Î™®Î?? Í≥?Í∞? Î¶¨Ï?§Ì?∏Í? Î≥¥Ï?¥Í?
+		try {
+			
+			ArrayList<MemberDTO> list=mservice.selectMember();
+			ta_mem.setText("");
+			for(MemberDTO m:list) {
+				ta_mem.append(m.getMemId()+"\t"+m.getName()+"\t"+m.getmDate()+"\t"+m.getPhone()+"\t"+m.getPoint()+"\n");
+			}
+		} catch (CafeException e) {
+			JOptionPane.showMessageDialog(this, e.getMessage());
+		}
+		
+	}
+
 	private void ordersPanel() {
 		Panel orderPanel=new Panel();
 		Panel orderPanel_sub1=new Panel();
@@ -68,7 +97,7 @@ public class CafeUi extends Frame{
 		tf_orderProd=new TextField(20);
 		tf_orderQuan=new TextField(20);
 		
-		btn_order=new Button("Ï£ºÎ¨∏ÌïòÍ∏∞");
+		btn_order=new Button("Ï£ºÎ¨∏??Í∏?");
 
 		ta_order=new TextArea();
 	
@@ -80,13 +109,13 @@ public class CafeUi extends Frame{
 		orderPanel.add(orderPanel_sub2);
 		orderPanel_sub1.setLayout(new GridLayout(3,3,0,10));	
 
-		orderPanel_sub1.add(new Label("        Í≥†Í∞ùÎ™Ö"));		
+		orderPanel_sub1.add(new Label("        Í≥?Í∞?Î™?"));		
 		orderPanel_sub1.add(tf_orderMem);
 		orderPanel_sub1.add(new Label());
-		orderPanel_sub1.add(new Label("        ÏÉÅÌíàÎ™Ö"));
+		orderPanel_sub1.add(new Label("        ????Î™?"));
 		orderPanel_sub1.add(tf_orderProd);
 		orderPanel_sub1.add(new Label());
-		orderPanel_sub1.add(new Label("        ÏàòÎüâ"));
+		orderPanel_sub1.add(new Label("        ????"));
 		orderPanel_sub1.add(tf_orderQuan);
 		orderPanel_sub1.add(new Label());
 		orderPanel_sub2.add(btn_order);
@@ -105,10 +134,10 @@ public class CafeUi extends Frame{
 		tf_prodCode=new TextField(20);
 		tf_prodName=new TextField(20);
 		tf_prodPrice=new TextField(20);
-		btn_prodInsert=new Button("Îì±Î°ù");
-		btn_prodUpdate=new Button("ÏàòÏ†ï");
-		btn_prodSelect=new Button("Ï°∞Ìöå");
-		btn_prodDelete=new Button("ÏÇ≠Ï†ú");
+		btn_prodInsert=new Button("?±Î?");
+		btn_prodUpdate=new Button("????");
+		btn_prodSelect=new Button("Ï°∞Ì??");
+		btn_prodDelete=new Button("????");
 		ta_prod=new TextArea();
 	
 		add(productPanel);
@@ -119,13 +148,13 @@ public class CafeUi extends Frame{
 		productPanel.add(productPanel_sub2);
 		productPanel_sub1.setLayout(new GridLayout(3,3,0,10));	
 
-		productPanel_sub1.add(new Label("        ÏÉÅÌíà ÏΩîÎìú"));		
+		productPanel_sub1.add(new Label("        ???? ÏΩ???"));		
 		productPanel_sub1.add(tf_prodCode);
 		productPanel_sub1.add(new Label());
-		productPanel_sub1.add(new Label("        ÏÉÅÌíàÎ™Ö"));
+		productPanel_sub1.add(new Label("        ????Î™?"));
 		productPanel_sub1.add(tf_prodName);
 		productPanel_sub1.add(new Label());
-		productPanel_sub1.add(new Label("        Í∞ÄÍ≤©"));
+		productPanel_sub1.add(new Label("        Í∞?Í≤?"));
 		productPanel_sub1.add(tf_prodPrice);
 		productPanel_sub1.add(new Label());
 		productPanel_sub2.add(btn_prodInsert);
@@ -148,10 +177,10 @@ public class CafeUi extends Frame{
 		tf_memId=new TextField(20);
 		tf_memName=new TextField(20);
 		tf_phone=new TextField(20);
-		btn_memInsert=new Button("Í∞ÄÏûÖ");
-		btn_memUpdate=new Button("ÏàòÏ†ï");
-		btn_memSelect=new Button("Ï°∞Ìöå");
-		btn_memDelete=new Button("ÏÇ≠Ï†ú");
+		btn_memInsert=new Button("Í∞???");
+		btn_memUpdate=new Button("????");
+		btn_memSelect=new Button("Ï°∞Ì??");
+		btn_memDelete=new Button("????");
 		ta_mem=new TextArea();
 		
 		add(memberPanel);
@@ -162,13 +191,13 @@ public class CafeUi extends Frame{
 		memberPanel.add(memberPanel_sub2);
 		memberPanel_sub1.setLayout(new GridLayout(3,3,0,10));	
 
-		memberPanel_sub1.add(new Label("        Í≥†Í∞ù ID"));		
+		memberPanel_sub1.add(new Label("        Í≥?Í∞? ID"));		
 		memberPanel_sub1.add(tf_memId);
 		memberPanel_sub1.add(new Label());
-		memberPanel_sub1.add(new Label("        Í≥†Í∞ùÎ™Ö"));
+		memberPanel_sub1.add(new Label("        Í≥?Í∞?Î™?"));
 		memberPanel_sub1.add(tf_memName);
 		memberPanel_sub1.add(new Label());
-		memberPanel_sub1.add(new Label("        Ï†ÑÌôîÎ≤àÌò∏"));
+		memberPanel_sub1.add(new Label("        ????Î≤???"));
 		memberPanel_sub1.add(tf_phone);
 		memberPanel_sub1.add(new Label());
 		memberPanel_sub2.add(btn_memInsert);
@@ -187,15 +216,83 @@ public class CafeUi extends Frame{
 
 	private void eventProcess() {
 		
+		//Ï£ºÎ¨∏
+		btn_order.addActionListener(e->{
+			String memId=tf_memId.getText();
+			String prodCode=tf_prodCode.getText();
+			int quantity=Integer.parseInt(tf_orderQuan.getText());
+			OrderDTO o=new OrderDTO(quantity, memId, prodCode, "kiosk");
+			try {
+				int orderNo=oService.insertOrder(o);
+				if(orderNo>0) {
+					JOptionPane.showMessageDialog(CafeUi.this, "Ï£ºÎ¨∏ ??Î£? : Ï£ºÎ¨∏Î≤??? [ "+orderNo+" ] ");
+				}else {
+					JOptionPane.showMessageDialog(CafeUi.this, "Ï£??°Ì?©Î????. ?§Ï?? Ï£ºÎ¨∏ ?¥Ï£º?∏Ï??");
+				}
+			} catch (CafeException e1) {
+				JOptionPane.showMessageDialog(CafeUi.this, e1.getMessage());
+			}
+		});
+		
+		//????Ï°∞Ì??
+		btn_prodSelect.addActionListener(e-> { //???§Ï??
+				String prodCode=tf_prodCode.getText();
+				try {
+					String prodName=pService.selectProduct(prodCode);
+					if(prodName==null) {
+						JOptionPane.showMessageDialog(CafeUi.this, "???? ÏΩ???Î•? ???∏Ì?? Ï£ºÏ?∏Ï??");
+					}else {
+						tf_orderProd.setText(prodName);
+					}
+				} catch (CafeException e1) {
+					JOptionPane.showMessageDialog(CafeUi.this, e1.getMessage());
+				}
+				
+			}
+		);
 		
 		
+		//???? ?±Î?
+		btn_prodInsert.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String prodCode=tf_prodCode.getText();
+				String prodName=tf_prodName.getText();
+				int price=Integer.parseInt(tf_prodPrice.getText());
+				ProductDTO p=new ProductDTO(prodCode, prodName, price);
+				
+				try {
+					
+					pService.insertProduct(p);
+					setProductList();
+					JOptionPane.showMessageDialog(CafeUi.this, "???? ?±Î? ??Î£?");
+				} catch (CafeException e1) {
+					JOptionPane.showMessageDialog(CafeUi.this, e1.getMessage());
+				}
+				
+				
+			}
+		});
+		
+		// Í≥?Í∞? Ï°∞Ì??		
 		btn_memSelect.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Ï°∞Ìöå
+				
 				String memId= tf_memId.getText();
-				JOptionPane.showMessageDialog(CafeUi.this, memId+"Îãò Ï°∞Ìöå ÎêòÏÖ®ÏäµÎãàÎã§.");
+				try {
+					String memName=mservice.selectMember(memId);
+					if(memName==null) {
+						JOptionPane.showMessageDialog(CafeUi.this, "Í≥?Í∞? IDÎ•? ???∏Ì?? Ï£ºÏ?∏Ï??");
+					}else {
+						tf_orderMem.setText(memName);
+					}
+				} catch (CafeException e1) {
+					JOptionPane.showMessageDialog(CafeUi.this, e1.getMessage());
+				}
+				
 			}
 		});
 		
@@ -203,17 +300,21 @@ public class CafeUi extends Frame{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Í∞ÄÏûÖ
+				// Í∞???
 				String memId= tf_memId.getText();
 				String memName=tf_memName.getText();
 				String phone=tf_phone.getText();
 				Date now=new Date();
-				Member m=new Member(memId,memName,now,phone);
+				MemberDTO m=new MemberDTO(memId,memName,now,phone);
 				System.out.println(m);
 				try {
 					
 					mservice.insertMember(m);
-					JOptionPane.showMessageDialog(CafeUi.this, "Í∞ÄÏûÖ ÎêòÏÖ®ÏäµÎãàÎã§.");
+					setMemberList();
+					tf_memId.setText("");
+					tf_memName.setText("");
+					tf_phone.setText("");
+					JOptionPane.showMessageDialog(CafeUi.this, "Í∞??? ???®Ï?µÎ????.");
 				} catch (CafeException e1) {
 					JOptionPane.showMessageDialog(CafeUi.this, e1.getMessage());
 				}

@@ -6,7 +6,7 @@ public class CafeException extends Exception {
 		super(message);
 		// TODO Auto-generated constructor stub
 	}
+	
+	
 
-	
-	
 }
